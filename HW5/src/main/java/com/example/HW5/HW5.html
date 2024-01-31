@@ -30,6 +30,7 @@
 <script>
     document.querySelector("#btnSend").addEventListener("click", ()=> {
         //POST
+        /**
         $.ajax({
             url : "http://127.0.0.1:8080/payment",
             method : "POST",
@@ -47,5 +48,25 @@
         .fail((res, msg, status)=>{
             console.log(msg);
         });      
+        **/
+        
+        /** 강사님 코드 : JSON으로 BE와 데이터를 주고 받고 싶은 경우 **/
+        $.ajax({
+            url : "http://127.0.0.1:8080/payment",
+            method : "POST",
+            contentType : 'application/json',
+            data :JSON.stringify({
+				"name" : $("#name").val(),
+                "per_pay": $("#per_pay").val(),
+                "work_time": $("#work_time").val()
+            })
+        })
+        .done((res)=>{
+			document.querySelector("#result").innerHTML = res.msg;
+            console.log(res);
+        })
+        .fail((res, msg, status)=>{
+            console.log(msg);
+        }); 
     })
 </script>
