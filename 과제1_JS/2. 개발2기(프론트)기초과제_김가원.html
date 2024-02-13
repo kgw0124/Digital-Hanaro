@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    table {
+        width:80%; 
+        margin: auto;
+        border: 1px solid #444444;
+        border-collapse: collapse;
+    }
+    th{
+        padding: 10px 0;
+        background-color: steelblue;
+        border: 1px solid steelblue;
+    }
+    td{
+        padding: 10px 0;
+        border: 1px solid steelblue;
+    }
+    .alignRight{
+        text-align: right;
+    }
+</style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>이름</th>
+                <th>근무시간</th>
+                <th>시간당급여액</th>
+                <th>기본액</th>
+                <th>초과수당</th>
+                <th>합계</th>
+                <th>세액</th>
+                <th>실지불액</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+    </table>
+</body>
+</html>
+<script>
+    let data = {
+        "base_time":20,
+        "list":
+        [
+            {"id":1, "username":"홍길동", "work_time":40, "per_pay":10000},
+            {"id":2, "username":"송민헌", "work_time":20, "per_pay":20000},
+            {"id":3, "username":"장길산", "work_time":30, "per_pay":30000},
+            {"id":4, "username":"임꺽정", "work_time":10, "per_pay":40000},
+            {"id":5, "username":"강민구", "work_time":30, "per_pay":10000}
+        ]
+    } 
+
+    window.onload = getContent();
+
+    function getContent(){
+        let tbody = document.getElementById("tbody");
+
+        let baseTime = data.base_time;
+        let totalValue = 0;
+
+        for(item of data.list){
+            let row = tbody.insertRow(tbody.rows.length);
+
+            let cellArr = [];
+            for(let i=0; i<9; i++){
+                cellArr.push(row.insertCell(i));
+                if(i != 1){ //내용물이 숫자일 경우, 오른쪽 정렬
+                    cellArr[i].className = "alignRight"; 
+                }
+            }
+
+            let basePay = calcBasePay(item.work_time, item.per_pay);
+            let overPay = calcOverPay(baseTime, item.work_time, item.per_pay);
+            let totalPay = calcTotalPay(basePay, overPay);
+            let tax = calcTax(totalPay);
+            let resultPay = calcResultPay(totalPay, tax);
+            totalValue += resultPay;
+
+            cellArr[0].innerHTML = item.id;
+            cellArr[1].innerHTML = item.username;
+            cellArr[2].innerHTML = item.work_time;
+            cellArr[3].innerHTML = item.per_pay.toLocaleString();
+            cellArr[4].innerHTML = basePay.toLocaleString();
+            cellArr[5].innerHTML = overPay.toLocaleString();
+            cellArr[6].innerHTML = totalPay.toLocaleString();
+            cellArr[7].innerHTML = tax.toLocaleString();
+            cellArr[8].innerHTML = resultPay.toLocaleString();
+        }
+
+        let row = tbody.insertRow(tbody.rows.length);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        cell1.innerHTML = "총 지불액";
+        cell2.innerHTML = totalValue.toLocaleString();
+        cell2.className = "alignRight";
+        cell2.colSpan = "8"; 
+    }
+
+    function calcBasePay(workTime, perPay){
+        return workTime*perPay;
+    }
+
+    function calcOverPay(baseTime, workTime, perPay){
+        overPay = 0;
+        if(workTime > baseTime){
+            overPay = (workTime-baseTime)*perPay/2;
+        }
+        return overPay;
+    }
+
+    function calcTotalPay(basePay, overPay){
+        return basePay + overPay;
+    }
+
+    function calcTax(totalPay){
+        return totalPay * 0.033;
+    }
+
+    function calcResultPay(totalPay, tax){
+        return totalPay - tax;
+    }
+</script>
