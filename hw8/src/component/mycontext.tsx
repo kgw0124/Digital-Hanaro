@@ -31,10 +31,7 @@ const AppProvider = ({children}:{children:any})=>{
     const [state, dispatch] = useReducer(LoginReducer, initalState);
 
     useEffect(() => {
-        const savedState = getStateFromLocalStorage("appState");
-        if (savedState) {
-            dispatch({ type: "LOGIN", value: savedState });
-        }
+        dispatch({ type: "RESET", value: initalState });
     }, []);
 
     return (
