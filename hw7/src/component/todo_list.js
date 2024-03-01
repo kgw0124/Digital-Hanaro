@@ -16,7 +16,7 @@ function TodoList(){
         let url = "https://jsonplaceholder.typicode.com/todos";
         let result = await axios.get(url);
         setTodoList(result.data);
-        setLoading(true);
+        setLoading(true); // 배열을 같은 화면에서 수정/삭제 진행할 때 사용
     }
 
     useEffect(()=>{ // axios 대신 async 사용
